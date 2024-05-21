@@ -51,18 +51,22 @@
         .btn:hover {
             background-color: #0056b3;
         }
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+        }
         .btn.google {
             background-color: #db4437;
+            flex: 1;
         }
         .btn.kakao {
             background-color: #fee500;
             color: #3b1e1e;
+            flex: 1;
         }
         .btn.naver {
             background-color: #03c75a;
-        }
-        .btn.signup {
-            background-color: #28a745;
+            flex: 1;
         }
     </style>
 </head>
@@ -73,10 +77,12 @@
         <input type="password" name="password" class="input" placeholder="비밀번호">
         <input type="submit" class="btn" value="로그인">
     </form>
-    <a href="/oauth2/authorization/google" class="btn google">Google</a>
-    <a href="/oauth2/authorization/kakao" class="btn kakao">kakao</a>
-    <a href="/oauth2/authorization/naver" class="btn naver">naver</a>
-    <a href="/signup" class="btn signup">회원 가입</a>
+    <div class="social-buttons">
+        <a href="/oauth2/authorization/google" class="btn google">Google</a>
+        <a href="/oauth2/authorization/kakao" class="btn kakao">kakao</a>
+        <a href="/oauth2/authorization/naver" class="btn naver">naver</a>
+    </div>
+    <a href="/signup" class="btn">회원 가입</a>
 </div>
 </body>
 </html>
