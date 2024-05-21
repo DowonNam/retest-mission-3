@@ -57,8 +57,19 @@ public class MainService {
         Notebook targetNotebook = this.getNotebook(notebookId);
         Note targetNote = noteService.getNote(noteId);
 
+        List<Note> sortedNoteList;
+
+        if(sort.equals("date")) {
+            sortedNoteList = noteService.getSortedListByCreateDate(targetNotebook);
+        }
+        else  {
+            sortedNoteList = noteService.getSortedListByTitle(targetNotebook);
+        }
+
         mainDataDto.setTargetNotebook(targetNotebook);
+        mainDataDto.setNoteList(sortedNoteList);
         mainDataDto.setTargetNote(targetNote);
+
 
         return mainDataDto;
     }
