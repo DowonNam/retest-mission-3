@@ -1,0 +1,49 @@
+
+<li th:fragment="noteTree(notebookList, targetNotebook)" th:each="notebook : ${notebookList}"
+    th:with="basic='w-[90%] p-[10px]'">
+    <th:block th:if="${!#lists.isEmpty(notebook.children)}">
+        <details open>
+            <summary class="flex p-0"><a th:class="${basic}"
+                                         th:classappend="${notebook.id == targetNotebook.id} ? 'bg-blue-600':''"
+                                         th:href="@{|/books/${notebook.id}?keyword=${paramHandler.keyword}&isSearchModal=${paramHandler.isSearchModal}&sort=${paramHandler.sort}|}"
+                                         th:text="${notebook.name}"></a></summary>
+            <ul>
+                <li th:replace="~{fragments/notebook::noteTree(${notebook.children}, ${targetNotebook})}"></li>
+            </ul>
+        </details>
+    </th:block>
+    <th:block th:if="${#lists.isEmpty(notebook.children)}">
+        <a th:class="${basic}"
+           th:classappend="${notebook.id == targetNotebook.id} ? 'bg-blue-600' : '' "
+           th:href="@{|/books/${notebook.id}?keyword=${paramHandler.keyword}&isSearchModal=${paramHandler.isSearchModal}&sort=${paramHandler.sort}|}" th:text="${notebook.name}"></a>
+    </th:block>
+</li>
+
+<li th:fragment="moveTree(notebookList, targetNotebook)" th:each="notebook : ${notebookList}"
+    th:with="basic='w-[90%] p-[10px]'">
+    <th:block th:if="${!#lists.isEmpty(notebook.children)}">
+        <details open
+                 th:if="${notebook.id != targetNotebook.id and !#lists.contains(targetNotebook.children, notebook)}">
+            <summary class="flex p-0">
+                <input type="radio" name="destinationId" th:value="${notebook.id}">
+                <a th:class="${basic}"
+                   th:classappend="${notebook.id == targetNotebook.id} ? 'bg-blue-600':''"
+                   href="javascript:void(0)"
+                   th:text="${notebook.name}"></a>
+            </summary>
+            <ul>
+                <li th:replace="~{fragments/notebook::moveTree(${notebook.children}, ${targetNotebook})}"></li>
+            </ul>
+        </details>
+    </th:block>
+    <th:block th:if="${#lists.isEmpty(notebook.children)}">
+        <div th:if="${notebook.id != targetNotebook.id and !#lists.contains(targetNotebook.children, notebook)}"
+             class="flex">
+            <input type="radio" name="destinationId" th:value="${notebook.id}">
+            <a th:class="${basic}"
+               th:classappend="${notebook.id == targetNotebook.id} ? 'bg-blue-600' : '' "
+               href="javascript:void(0)"
+               th:text="${notebook.name}"></a>
+        </div>
+    </th:block>
+</li>

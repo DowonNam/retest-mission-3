@@ -22,4 +22,29 @@ public class NotebookService {
     public Notebook save(Notebook notebook) {
         return notebookRepository.save(notebook);
     }
+
+    public void delete(Long id){
+        notebookRepository.deleteById(id);
+    }
+
+    public Notebook updateName(Long id, String name){
+        Notebook notebook = getNotebook(id);
+        notebook.setName(name);
+        return notebookRepository.save(notebook);
+    }
+    public List<Notebook> getTopNotebookList(){
+        return notebookRepository.findByParentIsNull();
+    }
+
+    public void move(Long id, Long destinationId){
+        Notebook target = getNotebook(id);
+        Notebook destination = getNotebook(destinationId);
+
+        target.setParent(destination);
+        notebookRepository.save(target);
+    }
+
+    public List<Notebook> getSearchedNotebookList(String keyword){
+        return notebookRepository.findByNameContaining(keyword);
+    }
 }

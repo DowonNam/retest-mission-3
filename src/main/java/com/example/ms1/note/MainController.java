@@ -19,9 +19,9 @@ public class MainController {
     private final MainService mainService;
 
     @RequestMapping("/")
-    public String main(Model model) {
+    public String main(Model model, ParamHandler paramHandler) {
 
-        MainDataDto mainDataDto = mainService.getDefaultMainData();
+        MainDataDto mainDataDto = mainService.getDefaultMainData(paramHandler.getKeyword(), paramHandler.getSort());
         model.addAttribute("mainDataDto", mainDataDto);
         return "main";
     }

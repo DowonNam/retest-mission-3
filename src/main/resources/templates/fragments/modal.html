@@ -1,0 +1,122 @@
+<dialog th:fragment="moveModal" id="moveModal" class="modal">
+    <div class="modal-box">
+        <form th:action="@{|/books/${targetNotebook.id}/move|}" method="post">
+            <div>
+                <ul class="menu h-[100%] overflow-scroll">
+                    <li th:replace="~{fragments/notebook::moveTree(${notebookList}, ${targetNotebook})}">
+                </ul>
+            </div>
+            <div class="flex justify-end">
+                <input type="hidden" name="targetNoteId" th:value="${targetNote.id}">
+                <input type="submit" value="이동" class="btn postActionBtn">
+            </div>
+        </form>
+        <div class="modal-action">
+            <form method="dialog">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn">Close</button>
+            </form>
+        </div>
+    </div>
+</dialog>
+
+
+<dialog th:fragment="searchModal" id="searchModal" class="modal">
+    <div class="modal-box h-[550px]">
+        <div class="h-[15%]">
+            <form action="/" class="flex justify-center gap-5">
+
+                <input type="text" name="keyword" class="input input-bordered search-input"
+                       th:value="${paramHandler.keyword}">
+                <input type="hidden" name="isSearchModal" value="true">
+                <input type="submit" value="검색" class="btn searchBtn">
+            </form>
+        </div>
+        <ul class="h-[70%] border-2 overflow-auto"
+            th:with="itemHover='hover:bg-blue-600 hover:text-white p-[10px] flex', itemAnchorClass='getActionBtn inline-block w-[100%]'">
+            <li th:each="notebook : ${searchedNotebookList}" th:class="${itemHover}">
+                <i class="fa-solid fa-book p-[5px]"></i>
+                <a th:data-url="@{|/books/${notebook.id}|}" th:text="${notebook.name}"
+                   th:class="${itemAnchorClass}"></a>
+            </li>
+            <li th:each="note : ${searchedNoteList}" th:class="${itemHover}">
+                <i class="fa-solid fa-note-sticky p-[5px]"></i>
+                <a th:data-url="@{|/books/${note.notebook.id}/notes/${note.id}|}" th:text="${note.title}"
+                   th:class="${itemAnchorClass}"></a>
+            </li>
+        </ul>
+        <div class="modal-action">
+            <form method="dialog">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn">Close</button>
+            </form>
+        </div>
+    </div>
+</dialog>
+
+<script th:fragment="searchModalJs">
+    document.querySelector(".searchBtn").addEventListener("click", (e) => {
+        postAction(e.target, (params) => {
+            const keyword = document.querySelector(".search-input").value;
+            params.isSearchModal = true;
+            params.keyword = keyword;
+        });
+    });
+</script>
+
+<dialog th:fragment="renameModal" id="renameModal" class="modal">
+    <div class="modal-box flex flex-col items-center">
+        <form th:action="@{|/books/${targetNotebook.id}/update|}" class="flex" method="post">
+
+            <input type="hidden" name="targetNoteId" th:value="${targetNote.id}">
+            <input type="text" name="name" class="border-2" th:value="${targetNotebook.name}">
+            <input type="submit" class="btn postActionBtn">
+        </form>
+        <div class="modal-action">
+            <form method="dialog">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn">Close</button>
+            </form>
+        </div>
+    </div>
+</dialog>
+
+
+<dialog th:fragment="tagModal" id="tagModal" class="modal">
+    <div class="modal-box h-[550px]">
+        <h1>태그 목록</h1>
+        <ul class="h-[30%] border-2 overflow-auto flex flex-wrap gap-2">
+            <li th:each="tag : ${tagList}" class="w-[20%]">
+                <a th:data-url="@{|/tags/${tag.id}/notes|}" th:text="${tag.name}"
+                   class="tagItem p-[15px] h-[100%] w-[100%] inline-block text-[1.2rem]
+                   text-center hover:bg-blue-600 hover:text-white"
+                   th:classappend="${targetTag != null and targetTag.id == tag.id} ? 'bg-blue-600' : ''"
+                   th:data-notebook-id="${targetNotebook.id}" th:data-note-id="${targetNote.id}"></a>
+            </li>
+        </ul>
+        <ul class="h-[50%] border-2 overflow-auto"
+            th:with="itemHover='hover:bg-blue-600 hover:text-white p-[10px] flex', itemAnchorClass='getActionBtn inline-block w-[100%]'">
+            <li th:each="note : ${noteListByTag}" th:class="${itemHover}">
+                <a th:data-url="@{|/books/${note.notebook.id}/notes/${note.id}|}" th:text="${note.title}"
+                   th:class="${itemAnchorClass}"></a>
+            </li>
+        </ul>
+        <div class="modal-action">
+            <form method="dialog">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn">Close</button>
+            </form>
+        </div>
+    </div>
+</dialog>
+<script th:fragment="tagModalJs">
+    document.querySelectorAll(".tagItem").forEach((tagItem) => {
+        tagItem.addEventListener("click", (e) => {
+            getAction(e.target, (params) => {
+                params.notebookId = e.target.dataset.notebookId;
+                params.noteId = e.target.dataset.noteId;
+                params.isTagModal = true;
+            });
+        });
+    });
+</script>

@@ -1,11 +1,14 @@
 package com.example.ms1.note.note;
 
+import com.example.ms1.note.note.tag.NoteTag;
 import com.example.ms1.note.notebook.Notebook;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -21,5 +24,8 @@ public class Note {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Notebook notebook;
+
+    @OneToMany(mappedBy = "note")
+    private List<NoteTag> noteTagList = new ArrayList<>();
 
 }
